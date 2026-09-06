@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">NEXUS-X // GLOBAL CYBER DEFENSE OS</title>
+    <style>
+        :root {
+            --bg-color: #010204;
+            --panel-bg: rgba(2, 10, 18, 0.94);
+            --primary: #00ffcc;
+            --primary-glow: rgba(0, 255, 204, 0.35);
+            --accent: #ff0055;
+            --accent-glow: rgba(255, 0, 85, 0.35);
+            --text-main: #c8f3ff;
+            --border-color: #00ffcc55;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: #000103;
+        }
+
+        .master-container {
+            max-width: 1250px;
+            margin: 20px auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 25px;
+            position: relative;
+            z-index: 2;
+        }
+
+        @media (max-width: 950px) {
