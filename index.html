@@ -134,7 +134,7 @@
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 12px;
         }
 
@@ -447,10 +447,11 @@
             <div class="features-banner">
                 <h3>⚡ أدوات الفحص والأمان المتقدمة (اضغط للتنفيذ المباشر)</h3>
                 <div class="features-grid">
-                    <div class="feature-item" onclick="runTool('port')">🔍 فحص المنافذ النشطة</div>
-                    <div class="feature-item" onclick="runTool('vuln')">🛡️ كشف الثغرات الحرجة</div>
-                    <div class="feature-item" onclick="runTool('ssl')">🔒 تحليل تشفير SSL</div>
-                    <div class="feature-item" onclick="runTool('ddos')">⚡ اختبار جدار الحماية</div>
+                    <div class="feature-item" onclick="runTool('port')">🔍 فحص المنافذ</div>
+                    <div class="feature-item" onclick="runTool('vuln')">🛡️ كشف الثغرات</div>
+                    <div class="feature-item" onclick="runTool('ssl')">🔒 تحليل SSL</div>
+                    <div class="feature-item" onclick="runTool('ddos')">⚡ جدار الحماية</div>
+                    <div class="feature-item" onclick="runTool('yara')">🧬 أداة YARA</div>
                 </div>
             </div>
 
@@ -490,8 +491,8 @@
                     <h2>محطة التحكم والأوامر التفاعلية (Terminal OS)</h2>
                 </div>
                 <div class="terminal-box" id="terminalOutput">
-                    > Nexus Core OS [Version 7.4.0 - Enterprise Edition]<br>
-                    > اكتب 'help' لعرض الأوامر، أو 'scan', 'port', 'vuln', 'clear'...<br>
+                    > Nexus Core OS [Version 7.5.0 - Enterprise Edition]<br>
+                    > اكتب 'help' لعرض الأوامر، أو 'scan', 'port', 'yara', 'clear'...<br>
                 </div>
                 <div class="terminal-input-line">
                     <span style="color: var(--primary);">nexus@root:~#</span>
@@ -551,7 +552,7 @@
     </div>
 
     <script>
-        // إعدادات خلفية الماتركس والأكواد المتعددة (6 أشكال مختلفة)
+        // إعدادات خلفية الماتركس والأكواد المتعددة
         const canvas = document.getElementById('matrixCanvas');
         const ctx = canvas.getContext('2d');
 
@@ -588,5 +589,4 @@
 
             const activeChars = charSets[currentPatternKey] || charSets.matrix;
 
-            for (let i = 0; i < drops.length; i++) {
-                const text = activeChars.char
+            for (let i = 0; i < drops.length; i++)
