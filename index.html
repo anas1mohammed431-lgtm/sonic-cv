@@ -1,15 +1,413 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<title>sonic - Ethical Hacker</title>
-<style>
-body{font-family:Tahoma;background:#0a0a0a;color:#00ff88;margin:0;padding:0}
-.container{max-width:850px;margin:40px auto;background:#111;padding:40px;border-radius:15px;border:1px solid #00ff88;box-shadow:0 0 25px rgba(0,255,136,0.3)}
-h1{color:#00ff88;font-size:40px;margin:0;text-shadow:0 0 10px #00ff88}
-h2{color:#38bdf8;border-bottom:2px solid #00ff88;padding-bottom:10px;margin-top:30px}
-.skill{display:inline-block;background:#1e293b;padding:8px 15px;margin:5px;border-radius:20px;border:1px solid #00ff88}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">NEXUS-X // GLOBAL CYBER DEFENSE OS</title>
+    <style>
+        :root {
+            --bg-color: #010204;
+            --panel-bg: rgba(2, 10, 18, 0.94);
+            --primary: #00ffcc;
+            --primary-glow: rgba(0, 255, 204, 0.35);
+            --accent: #ff0055;
+            --accent-glow: rgba(255, 0, 85, 0.35);
+            --text-main: #c8f3ff;
+            --border-color: #00ffcc55;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: #000103;
+        }
+
+        .master-container {
+            max-width: 1250px;
+            margin: 20px auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 25px;
+            position: relative;
+            z-index: 2;
+        }
+
+        @media (max-width: 950px) {
+            .master-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .sidebar {
+            background: var(--panel-bg);
+            border: 1px solid var(--primary);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 0 35px var(--primary-glow);
+            backdrop-filter: blur(18px);
+            text-align: center;
+        }
+
+        .avatar-frame {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            margin: 0 auto 15px auto;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,255,204,0.05);
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+
+        .avatar-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .avatar-placeholder {
+            font-size: 2.5rem;
+            color: var(--primary);
+        }
+
+        .sidebar h1 {
+            color: #fff;
+            font-size: 1.8rem;
+            text-shadow: 0 0 15px var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .sidebar .rank {
+            color: var(--accent);
+            font-size: 0.8rem;
+            margin-bottom: 20px;
+            letter-spacing: 1.5px;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        /* لوحة المميزات التقنية العليا (مرتبة فوق النص) */
+        .features-banner {
+            background: linear-gradient(135deg, rgba(0,255,204,0.1), rgba(255,0,85,0.05));
+            border: 1px solid var(--primary);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 0 25px var(--primary-glow);
+        }
+
+        .features-banner h3 {
+            color: var(--primary);
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .feature-item {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px dashed var(--border-color);
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .panel-box {
+            background: var(--panel-bg);
+            border: 1px solid var(--primary);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 0 35px var(--primary-glow);
+            backdrop-filter: blur(18px);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px dashed var(--primary);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .panel-header h2 {
+            color: #fff;
+            font-size: 1.25rem;
+            text-shadow: 0 0 10px var(--primary);
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 12px var(--primary);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.3); opacity: 1; box-shadow: 0 0 20px var(--primary); }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+
+        p {
+            line-height: 1.8;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+        }
+
+        /* قنوات التواصل (3 أزرار واتساب وجروب مستقلة) */
+        .actions-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .cyber-btn {
+            background: rgba(0, 255, 204, 0.12);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 12px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: 0.3s;
+            box-shadow: 0 0 12px rgba(0,255,204,0.2);
+            font-size: 0.88rem;
+            text-align: center;
+        }
+
+        .cyber-btn:hover {
+            background: var(--primary);
+            color: #000;
+            box-shadow: 0 0 25px var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .cyber-btn.sec-wa {
+            border-color: #00ff66;
+            color: #00ff66;
+            background: rgba(0, 255, 102, 0.12);
+        }
+        .cyber-btn.sec-wa:hover {
+            background: #00ff66;
+            color: #000;
+        }
+
+        .cyber-btn.group-btn {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(255, 0, 85, 0.12);
+        }
+        .cyber-btn.group-btn:hover {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 0 25px var(--accent);
+        }
+
+        /* التيرمنال الخارق */
+        .terminal-box {
+            background: #000;
+            border: 1px solid var(--primary);
+            border-radius: 10px;
+            padding: 15px;
+            font-family: monospace;
+            max-height: 180px;
+            overflow-y: auto;
+            color: var(--primary);
+            font-size: 0.85rem;
+            margin-top: 15px;
+            box-shadow: inset 0 0 15px rgba(0,255,204,0.15);
+        }
+
+        .terminal-input-line {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            background: rgba(0,0,0,0.8);
+            border: 1px solid var(--border-color);
+            padding: 6px 10px;
+            border-radius: 6px;
+        }
+
+        .terminal-input-line input {
+            background: transparent;
+            border: none;
+            color: #fff;
+            outline: none;
+            width: 100%;
+            font-family: monospace;
+        }
+
+        /* نافذة طلب الباسورد للمطور */
+        .auth-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.88);
+            z-index: 9998;
+            backdrop-filter: blur(10px);
+        }
+
+        .auth-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 380px;
+            background: #030c14;
+            border: 2px solid var(--primary);
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 0 40px rgba(0, 255, 204, 0.4);
+            text-align: center;
+        }
+
+        .auth-box h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .auth-box input {
+            width: 100%;
+            padding: 12px;
+            background: #000;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            outline: none;
+            letter-spacing: 3px;
+        }
+
+        /* لوحة تحكم المطور الملكية */
+        .admin-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 92%;
+            max-width: 650px;
+            background: #020810;
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 60px rgba(0,255,204,0.5);
+            z-index: 9999;
+            border-radius: 16px;
+            padding: 30px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .admin-modal h3 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--primary);
+            padding-bottom: 10px;
+        }
+
+        .admin-modal label {
+            display: block;
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+            color: #fff;
+        }
+
+        .admin-modal input, .admin-modal textarea {
+            width: 100%;
+            background: #010408;
+            border: 1px solid var(--primary);
+            padding: 10px;
+            color: var(--primary);
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-family: monospace;
+        }
+
+        .close-admin {
+            background: #ff0055;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .system-admin-trigger {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 255, 204, 0.15);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            z-index: 999;
+            box-shadow: 0 0 15px rgba(0,255,204,0.3);
+            transition: 0.3s;
+        }
+        .system-admin-trigger:hover {
+            background: var(--primary);
+            color: #000;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -25,3 +423,195 @@ h2{color:#38bdf8;border-bottom:2px solid #00ff88;padding-bottom:10px;margin-top:
 </div>
 </body>
 </html>
+
+    <canvas id="matrixCanvas"></canvas>
+
+    <button class="system-admin-trigger" onclick="requestPassword()">⚡ لوحة تحكم المطور الملكية</button>
+
+    <!-- نافذة إدخال الباسورد -->
+    <div class="auth-overlay" id="authOverlay">
+        <div class="auth-box">
+            <h3>أدخل مفتاح الترخيص السري</h3>
+            <input type="password" id="ownerPassword" placeholder="••••••" onkeypress="checkPasswordKey(event)">
+            <button class="cyber-btn" onclick="verifyPassword()" style="width: 100%; justify-content: center;">فك تشفير الدخول</button>
+            <button class="close-admin" onclick="closeAuth()" style="margin-top: 10px; background: #333;">إلغاء</button>
+        </div>
+    </div>
+
+    <div class="master-container">
+        <div class="sidebar">
+            <div class="avatar-frame">
+                <span id="avatarPlaceholder" class="avatar-placeholder">🛡️</span>
+                <img id="userAvatar" alt="Avatar">
+            </div>
+            <h1 id="displayName">NEXUS-ADMIN</h1>
+            <div class="rank" id="displayRank">CHIEF SECURITY ARCHITECT</div>
+            
+            <div style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 15px;">
+                <p style="font-size: 0.82rem; color: var(--primary);">[حالة النواة]: 100% Secure & Encrypted</p>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- المميزات التقنية العليا فوق النصوص -->
+            <div class="features-banner">
+                <h3>⚡ القدرات التقنية وهندسة النظام المتطورة</h3>
+                <div class="features-grid">
+                    <div class="feature-item">🔹 فحص ثغرات متقدم (Real-time Scan)</div>
+                    <div class="feature-item">🔹 نظام تشفير مشفر عالي الأمان</div>
+                    <div class="feature-item">🔹 محطة أوامر تفاعلية (Terminal OS)</div>
+                    <div class="feature-item">🔹 شبكة تواصل متعددة القنوات</div>
+                </div>
+            </div>
+
+            <div class="panel-box">
+                <div class="panel-header">
+                    <h2>البروتوكول الذاتي والنبذة التقنية</h2>
+                    <div class="status-dot"></div>
+                </div>
+                <p id="displayAbout">
+                    منصة أمن سيبراني متطورة ومحطة عمليات مركزية متكاملة لاختبار الاختراق الأخلاقي، تأمين البنية التحتية الرقمية، ومراقبة تدفق البيانات بحماية تامة ضد التهديدات السيبرانية.
+                </p>
+                <div style="font-size: 0.85rem; color: var(--primary);">
+                    [البريد الإلكتروني للعمليات]: <span id="displayEmail">nexus.ops@cyber.secure</span>
+                </div>
+            </div>
+
+            <!-- أزرار التواصل الـ 3 (رقم 1، رقم 2، وجروب الواتساب الأخلاقي الجديد) -->
+            <div class="panel-box">
+                <div class="panel-header">
+                    <h2>قنوات الاتصال المشفرة والمجتمعات التقنية</h2>
+                </div>
+                <p>تواصل مع فريق التطوير أو انضم لجروب الأمان السيبراني التعليمي الأخلاقي:</p>
+                <div class="actions-container">
+                    <a id="displayWaPersonal" href="https://wa.me/201123817987" target="_blank" class="cyber-btn">
+                        💬 الواتساب الشخصي (1)
+                    </a>
+                    <a id="displayWaSecond" href="https://wa.me/201123817987" target="_blank" class="cyber-btn sec-wa">
+                        🟢 الواتساب الاحتياطي (2)
+                    </a>
+                    <a id="displayWaGroup" href="https://chat.whatsapp.com/GSFCB8ckqAu0ncbfxwSaj3" target="_blank" class="cyber-btn group-btn">
+                        🛡️ جروب التعليم الأمني
+                    </a>
+                </div>
+            </div>
+
+            <div class="panel-box">
+                <div class="panel-header">
+                    <h2>محطة التحكم والأوامر التفاعلية (Terminal OS)</h2>
+                </div>
+                <div class="terminal-box" id="terminalOutput">
+                    > Nexus Core OS [Version 7.4.0 - Enterprise Edition]<br>
+                    > اكتب 'help' لعرض الأوامر المتاحة أو 'scan' لبدء تشخيص الشبكة...<br>
+                </div>
+                <div class="terminal-input-line">
+                    <span style="color: var(--primary);">nexus@root:~#</span>
+                    <input type="text" id="terminalInput" placeholder="اكتب أمر هنا (مثال: help, scan, clear)..." onkeypress="handleTerminal(event)">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- لوحة تحكم المطور الملكية المتطورة -->
+    <div class="admin-modal" id="adminModal">
+        <h3>لوحة إدارة المطور الملكية (مُصرح للمالك فقط)</h3>
+        <label>صورة الملف الشخصي:</label>
+        <input type="file" id="adminImageInput" accept="image/*">
+
+        <label>الاسم المستعار للنظام:</label>
+        <input type="text" id="adminNameInput" value="NEXUS-ADMIN">
+
+        <label>المسمى الوظيفي / الرتبة:</label>
+        <input type="text" id="adminRankInput" value="CHIEF SECURITY ARCHITECT">
+
+        <label>نبذة النظام الذاتي (About):</label>
+        <textarea id="adminAboutInput" rows="3">منصة أمن سيبراني متطورة ومحطة عمليات مركزية متكاملة لاختبار الاختراق الأخلاقي.</textarea>
+
+        <label>رابط أو رقم الواتساب الأول (wa.me/...):</label>
+        <input type="text" id="adminWaPersonalInput" value="https://wa.me/201123817987">
+
+        <label>رابط أو رقم الواتساب الثاني:</label>
+        <input type="text" id="adminWaSecondInput" value="https://wa.me/201123817987">
+
+        <label>رابط جروب الواتساب للأمان السيبراني التعليمي:</label>
+        <input type="text" id="adminWaGroupInput" value="https://chat.whatsapp.com/GSFCB8ckqAu0ncbfxwSaj3">
+
+        <label>البريد الإلكتروني:</label>
+        <input type="text" id="adminEmailInput" value="nexus.ops@cyber.secure">
+
+        <button class="cyber-btn" onclick="saveAdminData()" style="width: 100%; justify-content: center; margin-bottom: 10px; background: var(--primary); color: #000;">حفظ التغييرات في النواة</button>
+        <button class="close-admin" onclick="closeAdmin()">إغلاق اللوحة</button>
+    </div>
+
+    <script>
+        // تأثير الماتركس السيبراني المتقدم
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth;
+
+        const chars = '01ABCDEFGHIJKLMNOPQRSTUVWXYZ<>/\\{}[]*&^%$#@!NEXUS_SECURE_ENGINE';
+        const fontSize = 13;
+        const columns = canvas.width / fontSize;
+        const drops = [];
+
+        for (let x = 0; x < columns; x++) { drops[x] = 1; }
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 2, 6, 0.08)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#00ffcc';
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.98) { drops[i] = 0; }
+                drops[i]++;
+            }
+        }
+        setInterval(drawMatrix, 30);
+
+        window.addEventListener('resize', () => {
+            canvas.height = window.innerHeight;
+            canvas.width = window.innerWidth;
+        });
+
+        // كلمة المرور الجديدة للمطور
+        const CORRECT_PASSWORD = "667788"; 
+
+        function requestPassword() {
+            document.getElementById('authOverlay').style.display = 'block';
+            document.getElementById('ownerPassword').value = '';
+            document.getElementById('ownerPassword').focus();
+        }
+
+        function closeAuth() {
+            document.getElementById('authOverlay').style.display = 'none';
+        }
+
+        function checkPasswordKey(e) {
+            if (e.key === 'Enter') { verifyPassword(); }
+        }
+
+        function verifyPassword() {
+            const pass = document.getElementById('ownerPassword').value;
+            if (pass === CORRECT_PASSWORD) {
+                closeAuth();
+                document.getElementById('adminModal').style.display = 'block';
+            } else {
+                alert('كلمة المرور غير صحيحة يا باشمهندس!');
+            }
+        }
+
+        function closeAdmin() {
+            document.getElementById('adminModal').style.display = 'none';
+        }
+
+        // التيرمنال التفاعلي
+        function handleTerminal(e) {
+            if (e.key === 'Enter') {
+                const input = document.getElementById('terminalInput')
