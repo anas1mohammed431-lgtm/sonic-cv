@@ -1,27 +1,352 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<title>sonic - Ethical Hacker</title>
-<style>
-body{font-family:Tahoma;background:#0a0a0a;color:#00ff88;margin:0;padding:0}
-.container{max-width:850px;margin:40px auto;background:#111;padding:40px;border-radius:15px;border:1px solid #00ff88;box-shadow:0 0 25px rgba(0,255,136,0.3)}
-h1{color:#00ff88;font-size:40px;margin:0;text-shadow:0 0 10px #00ff88}
-h2{color:#38bdf8;border-bottom:2px solid #00ff88;padding-bottom:10px;margin-top:30px}
-.skill{display:inline-block;background:#1e293b;padding:8px 15px;margin:5px;border-radius:20px;border:1px solid #00ff88}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">sonic | Ethical Hacker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        body {
+            background-color: #000;
+            color: #00ff66;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        /* خلفية الماتركس المتقدمة */
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: #000502;
+        }
+        .container {
+            max-width: 650px;
+            margin: 40px auto;
+            background: rgba(5, 15, 8, 0.85);
+            border: 1px solid #00ff66;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(0, 255, 102, 0.25);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
+        }
+        .profile-box {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .profile-img {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            border: 2px solid #00ff66;
+            object-fit: cover;
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.5);
+            display: none; /* مخفية حتى يتم رفع صورة */
+            margin: 0 auto 10px auto;
+        }
+        h1 {
+            color: #ffffff;
+            font-size: 2.2rem;
+            text-shadow: 0 0 10px #00ff66;
+            margin-bottom: 5px;
+            letter-spacing: 2px;
+        }
+        .subtitle {
+            color: #00cc55;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .section-title {
+            color: #ffffff;
+            font-size: 1.3rem;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            border-bottom: 1px dashed #00ff66;
+            padding-bottom: 5px;
+        }
+        p {
+            color: #b3ffcc;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .skill {
+            background: rgba(0, 255, 102, 0.1);
+            border: 1px solid #00ff66;
+            color: #00ff66;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            box-shadow: 0 0 5px rgba(0, 255, 102, 0.2);
+        }
+        .whatsapp-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #00cc55;
+            color: #000;
+            padding: 12px 22px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 10px;
+            box-shadow: 0 0 15px rgba(0, 204, 85, 0.5);
+            transition: 0.3s;
+        }
+        .whatsapp-btn:hover {
+            background: #00ff66;
+            box-shadow: 0 0 25px rgba(0, 255, 102, 0.8);
+            transform: translateY(-2px);
+        }
+        
+        /* زر فتح لوحة التحكم السري للمالك */
+        .admin-toggle-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 255, 102, 0.2);
+            border: 1px solid #00ff66;
+            color: #00ff66;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            z-index: 999;
+            box-shadow: 0 0 10px rgba(0, 255, 102, 0.3);
+        }
+        .admin-toggle-btn:hover {
+            background: #00ff66;
+            color: #000;
+        }
+
+        /* لوحة التحكم الخاصة بالمالك */
+        .admin-panel {
+            display: none;
+            margin-top: 35px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.95);
+            border: 2px solid #00ff66;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 255, 102, 0.4);
+        }
+        .admin-panel h3 {
+            color: #00ff66;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        .admin-panel label {
+            display: block;
+            font-size: 0.85rem;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+        .admin-panel input, .admin-panel textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 12px;
+            border-radius: 5px;
+            border: 1px solid #00ff66;
+            background: #050f08;
+            color: #00ff66;
+            font-size: 0.9rem;
+        }
+        .admin-panel button {
+            background: #00ff66;
+            color: #000;
+            padding: 10px;
+            width: 100%;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .admin-panel button:hover {
+            background: #00cc55;
+            box-shadow: 0 0 10px #00ff66;
+        }
+    </style>
 </head>
 <body>
-<div class="container">
-<h1>sonic</h1>
-<p>هاكر اخلاقي | Ethical Hacker | Cyber Security</p>
-<h2>عني</h2>
-<p>متخصص في اختبار الاختراق وتأمين الانظمة. بتعلم ازاي احمي مش اخترق. بستخدم Termux و Kali Linux في التجارب بتاعتي.</p>
-<h2>المهارات</h2>
-<span class="skill">Penetration Testing</span><span class="skill">Network Security</span><span class="skill">Linux</span><span class="skill">Python</span><span class="skill">Termux</span><span class="skill">Wireshark</span><span class="skill">HTML/CSS</span>
-<h2>تواصل معايا</h2>
-<p>واتساب: 01123817987</p>
-<p>جيميل: ...........</p>
-</div>
+
+    <!-- خلفية الماتركس المتحركة -->
+    <canvas id="matrixCanvas"></canvas>
+
+    <!-- زر سري لفتح لوحة التحكم -->
+    <button class="admin-toggle-btn" onclick="toggleAdminPanel()">⚙️ لوحة التحكم (للمالك فقط)</button>
+
+    <div class="container">
+        <div class="profile-box">
+            <img id="userImg" class="profile-img" alt="صورة المالك">
+            <h1 id="displayName">sonic</h1>
+            <p id="displaySubtitle" class="subtitle">هكر أخلاقي | Ethical Hacker | Cyber Security</p>
+        </div>
+        
+        <div class="section-title">عني</div>
+        <p id="displayAbout">متخصص في اختبار الاختراق وتأمين الأنظمة. أتعلم إزاي أحمي مش أخترق، باستخدام Kali Linux و Termux في التجارب بتاعتي.</p>
+        
+        <div class="section-title">المهارات</div>
+        <div class="skills-container" id="displaySkills">
+            <span class="skill">Penetration Testing</span>
+            <span class="skill">Network Security</span>
+            <span class="skill">Linux</span>
+            <span class="skill">Python</span>
+            <span class="skill">Termux</span>
+            <span class="skill">Wireshark</span>
+            <span class="skill">HTML/CSS</span>
+        </div>
+        
+        <div class="section-title">تواصل معايا</div>
+        <p>
+            <a href="https://wa.me/201123817987" target="_blank" class="whatsapp-btn">
+                <span>🟢</span> مراسلة عبر الواتساب
+            </a>
+        </p>
+        <p style="margin-top: 15px;">جيميل: <span id="displayEmail">.........</span></p>
+
+        <!-- لوحة تحكم المالك المخفية لتعديل البيانات وإضافة الصور -->
+        <div id="adminPanel" class="admin-panel">
+            <h3>لوحة إدارة الموقع (خاصة بيك)</h3>
+            <label>اختر صورة شخصية:</label>
+            <input type="file" id="imageInput" accept="image/*">
+            
+            <label>الاسم:</label>
+            <input type="text" id="inputName" value="sonic">
+            
+            <label>المسمى الوظيفي:</label>
+            <input type="text" id="inputSubtitle" value="هكر أخلاقي | Ethical Hacker | Cyber Security">
+            
+            <label>نبذة عني:</label>
+            <textarea id="inputAbout" rows="3">متخصص في اختبار الاختراق وتأمين الأنظمة. أتعلم إزاي أحمي مش أخترق، باستخدام Kali Linux و Termux في التجارب بتاعتي.</textarea>
+            
+            <label>البريد الإلكتروني (جيميل):</label>
+            <input type="text" id="inputEmail" value=".........">
+
+            <button onclick="saveChanges()">حفظ التعديلات فوراً</button>
+        </div>
+    </div>
+
+    <script>
+        // تأثير مطر الماتركس الاحترافي
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth;
+
+        const chars = '01ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789<>/\\{}[]*&^%$#@!';
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = [];
+
+        for (let x = 0; x < columns; x++) {
+            drops[x] = 1;
+        }
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 5, 2, 0.08)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#00ff66';
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        setInterval(drawMatrix, 35);
+
+        window.addEventListener('resize', () => {
+            canvas.height = window.innerHeight;
+            canvas.width = window.innerWidth;
+        });
+
+        // نظام إدارة محتوى المالك الذكي عبر المتصفح
+        window.onload = function() {
+            loadData();
+        }
+
+        function toggleAdminPanel() {
+            const panel = document.getElementById('adminPanel');
+            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function saveChanges() {
+            const name = document.getElementById('inputName').value;
+            const subtitle = document.getElementById('inputSubtitle').value;
+            const about = document.getElementById('inputAbout').value;
+            const email = document.getElementById('inputEmail').value;
+            const imageInput = document.getElementById('imageInput');
+
+            localStorage.setItem('siteName', name);
+            localStorage.setItem('siteSubtitle', subtitle);
+            localStorage.setItem('siteAbout', about);
+            localStorage.setItem('siteEmail', email);
+
+            if (imageInput.files && imageInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    localStorage.setItem('siteImg', e.target.result);
+                    loadData();
+                    alert('تم الحفظ وتحديث الصورة والبيانات بنجاح يا باشمهندس!');
+                    toggleAdminPanel();
+                }
+                reader.readAsDataURL(imageInput.files[0]);
+            } else {
+                loadData();
+                alert('تم حفظ البيانات بنجاح يا باشمهندس!');
+                toggleAdminPanel();
+            }
+        }
+
+        function loadData() {
+            if(localStorage.getItem('siteName')) {
+                document.getElementById('displayName').innerText = localStorage.getItem('siteName');
+                document.getElementById('pageTitle').innerText = localStorage.getItem('siteName') + ' | Ethical Hacker';
+                document.getElementById('inputName').value = localStorage.getItem('siteName');
+            }
+            if(localStorage.getItem('siteSubtitle')) {
+                document.getElementById('displaySubtitle').innerText = localStorage.getItem('siteSubtitle');
+                document.getElementById('inputSubtitle').value = localStorage.getItem('siteSubtitle');
+            }
+            if(localStorage.getItem('siteAbout')) {
+                document.getElementById('displayAbout').innerText = localStorage.getItem('siteAbout');
+                document.getElementById('inputAbout').value = localStorage.getItem('siteAbout');
+            }
+            if(localStorage.getItem('siteEmail')) {
+                document.getElementById('displayEmail').innerText = localStorage.getItem('siteEmail');
+                document.getElementById('inputEmail').value = localStorage.getItem('siteEmail');
+            }
+            if(localStorage.getItem('siteImg')) {
+                const img = document.getElementById('userImg');
+                img.src = localStorage.getItem('siteImg');
+                img.style.display = 'block';
+            }
+        }
+    </script>
 </body>
 </html>
