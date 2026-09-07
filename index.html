@@ -1,86 +1,1074 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="pageTitle">NEXUS-X // GLOBAL CYBER DEFENSE OS</title>
-    <style>
-        :root {--bg-color: #010204;--panel-bg: rgba(2, 10, 18, 0.94);--primary: #00ffcc;--primary-glow: rgba(0, 255, 204, 0.35);--accent: #ff0055;--accent-glow: rgba(255, 0, 85, 0.35);--text-main: #c8f3ff;--border-color: #00ffcc55;}
-        * {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Courier New', Courier, monospace;}
-        body {background-color: var(--bg-color);color: var(--text-main);min-height: 100vh;overflow-x: hidden;position: relative;}
-        canvas {position: fixed;top: 0;left: 0;width: 100%;height: 100%;z-index: -1;background: #000103;}
-       .master-container {max-width: 1250px;margin: 20px auto;padding: 20px;display: grid;grid-template-columns: 350px 1fr;gap: 25px;position: relative;z-index: 2;}
-        @media (max-width: 950px) {.master-container {grid-template-columns: 1fr;}}
-       .sidebar {background: var(--panel-bg);border: 1px solid var(--primary);border-radius: 16px;padding: 25px;box-shadow: 0 0 35px var(--primary-glow);backdrop-filter: blur(18px);text-align: center;}
-       .avatar-frame {width: 130px;height: 130px;border-radius: 50%;border: 2px solid var(--primary);margin: 0 auto 15px auto;overflow: hidden;display: flex;align-items: center;justify-content: center;background: rgba(0,255,204,0.05);box-shadow: 0 0 20px var(--primary-glow);}
-       .avatar-placeholder {font-size: 2.5rem;color: var(--primary);}
-       .sidebar h1 {color: #fff;font-size: 1.5rem;text-shadow: 0 0 15px var(--primary);margin-bottom: 5px;word-break: break-all;}
-       .rank {color: var(--accent);font-size: 0.8rem;margin-bottom: 20px;letter-spacing: 1.5px;}
-       .main-content {display: flex;flex-direction: column;gap: 25px;}
-       .features-banner {background: linear-gradient(135deg, rgba(0,255,204,0.1), rgba(255,0,85,0.05));border: 1px solid var(--primary);border-radius: 16px;padding: 20px;box-shadow: 0 0 25px var(--primary-glow);}
-       .features-banner h3 {color: var(--primary);margin-bottom: 12px;font-size: 1.1rem;display: flex;align-items: center;gap: 8px;}
-       .features-grid {display: grid;grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));gap: 12px;}
-       .feature-item {background: rgba(0, 0, 0, 0.5);border: 1px dashed var(--border-color);padding: 10px 12px;border-radius: 8px;font-size: 0.8rem;color: #fff;display: flex;align-items: center;gap: 6px;cursor: pointer;transition: 0.2s;}
-       .feature-item:hover {border-color: var(--primary);background: rgba(0,255,204,0.08);}
-       .panel-box {background: var(--panel-bg);border: 1px solid var(--primary);border-radius: 16px;padding: 25px;box-shadow: 0 0 35px var(--primary-glow);backdrop-filter: blur(18px);}
-       .panel-header {display: flex;justify-content: space-between;align-items: center;border-bottom: 1px dashed var(--primary);padding-bottom: 10px;margin-bottom: 15px;}
-       .panel-header h2 {color: #fff;font-size: 1.25rem;text-shadow: 0 0 10px var(--primary);}
-       .status-dot {width: 10px;height: 10px;background-color: var(--primary);border-radius: 50%;box-shadow: 0 0 12px var(--primary);animation: pulse 1.5s infinite;}
-        @keyframes pulse {0% { transform: scale(0.95); opacity: 0.8; }50% { transform: scale(1.3); opacity: 1; box-shadow: 0 0 20px var(--primary); }100% { transform: scale(0.95); opacity: 0.8; }}
-       .actions-container {display: grid;grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));gap: 12px;margin-top: 15px;}
-       .cyber-btn {background: rgba(0, 255, 204, 0.12);border: 1px solid var(--primary);color: var(--primary);padding: 12px 18px;border-radius: 10px;cursor: pointer;font-weight: bold;text-decoration: none;display: inline-flex;align-items: center;justify-content: center;gap: 10px;transition: 0.3s;box-shadow: 0 0 12px rgba(0,255,204,0.2);font-size: 0.85rem;text-align: center;}
-       .cyber-btn:hover {background: var(--primary);color: #000;box-shadow: 0 0 25px var(--primary);transform: translateY(-2px);}
-       .cyber-btn.sec-wa {border-color: #00ff66;color: #00ff66;background: rgba(0, 255, 102, 0.12);}
-       .cyber-btn.sec-wa:hover {background: #00ff66;color: #000;}
-       .cyber-btn.group-btn {border-color: var(--accent);color: var(--accent);background: rgba(255, 0, 85, 0.12);}
-       .cyber-btn.group-btn:hover {background: var(--accent);color: #fff;box-shadow: 0 0 25px var(--accent);}
-       .terminal-box {background: #000;border: 1px solid var(--primary);border-radius: 10px;padding: 15px;font-family: monospace;max-height: 180px;overflow-y: auto;color: var(--primary);font-size: 0.85rem;margin-top: 15px;box-shadow: inset 0 0 15px rgba(0,255,204,0.15);word-break: break-all;}
-       .terminal-input-line {display: flex;align-items: center;gap: 8px;margin-top: 10px;background: rgba(0,0,0,0.8);border: 1px solid var(--border-color);padding: 6px 10px;border-radius: 6px;}
-       .terminal-input-line input {background: transparent;border: none;color: #fff;outline: none;width: 100%;font-family: monospace;font-size: 0.95rem;}
-       .auth-overlay {display: none;position: fixed;top: 0;left: 0;width: 100%;height: 100%;background: rgba(0, 0, 0, 0.88);z-index: 9998;backdrop-filter: blur(10px);}
-       .auth-box {position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);width: 90%;max-width: 380px;background: #030c14;border: 2px solid var(--primary);padding: 30px;border-radius: 14px;box-shadow: 0 0 40px rgba(0, 255, 204, 0.4);text-align: center;}
-       .auth-box h3 {color: var(--primary);margin-bottom: 15px;}
-       .auth-box input {width: 100%;padding: 12px;background: #000;border: 1px solid var(--primary);color: var(--primary);border-radius: 8px;text-align: center;font-size: 1.2rem;margin-bottom: 15px;outline: none;letter-spacing: 3px;}
-       .admin-modal {display: none;position: fixed;top: 50%;left: 50%;transform: translate(-50%, -50%);width: 92%;max-width: 650px;background: #020810;border: 2px solid var(--primary);box-shadow: 0 0 60px rgba(0,255,204,0.5);z-index: 9999;border-radius: 16px;padding: 30px;max-height: 90vh;overflow-y: auto;}
-       .admin-modal h3 {color: var(--primary);margin-bottom: 20px;border-bottom: 1px solid var(--primary);padding-bottom: 10px;}
-       .admin-modal label {display: block;font-size: 0.85rem;margin-bottom: 6px;color: #fff;}
-       .admin-modal input,.admin-modal textarea,.admin-modal select {width: 100%;background: #010408;border: 1px solid var(--primary);padding: 10px;color: var(--primary);border-radius: 6px;margin-bottom: 15px;font-family: monospace;}
-       .close-admin {background: #ff0055;color: #fff;border: none;padding: 10px;border-radius: 6px;cursor: pointer;width: 100%;font-weight: bold;margin-top: 10px;}
-       .system-admin-trigger {position: fixed;bottom: 20px;left: 20px;background: rgba(0, 255, 204, 0.15);border: 1px solid var(--primary);color: var(--primary);padding: 10px 18px;border-radius: 8px;font-size: 0.85rem;cursor: pointer;z-index: 999;box-shadow: 0 0 15px rgba(0,255,204,0.3);transition: 0.3s;}
-       .system-admin-trigger:hover {background: var(--primary);color: #000;}
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">NEXUS-X // GLOBAL CYBER DEFENSE OS</title>
+
+<style>
+:root{
+  --bg-color:#010204;
+  --panel-bg:rgba(2,10,18,.94);
+  --primary:#00ffcc;
+  --primary-glow:rgba(0,255,204,.35);
+  --accent:#ff0055;
+  --text-main:#c8f3ff;
+  --border-color:rgba(0,255,204,.33);
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Courier New',Courier,monospace;
+}
+
+body{
+  background:var(--bg-color);
+  color:var(--text-main);
+  min-height:100vh;
+  overflow-x:hidden;
+  position:relative;
+}
+
+canvas{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  z-index:-1;
+  background:#000103;
+}
+
+.master-container{
+  max-width:1250px;
+  margin:20px auto;
+  padding:20px;
+  display:grid;
+  grid-template-columns:350px 1fr;
+  gap:25px;
+  position:relative;
+  z-index:2;
+}
+
+@media(max-width:950px){
+  .master-container{
+    grid-template-columns:1fr;
+  }
+}
+
+.sidebar{
+  background:var(--panel-bg);
+  border:1px solid var(--primary);
+  border-radius:16px;
+  padding:25px;
+  box-shadow:0 0 35px var(--primary-glow);
+  backdrop-filter:blur(18px);
+  text-align:center;
+}
+
+.avatar-frame{
+  width:130px;
+  height:130px;
+  border-radius:50%;
+  border:2px solid var(--primary);
+  margin:0 auto 15px;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,255,204,.05);
+  box-shadow:0 0 20px var(--primary-glow);
+}
+
+.avatar-frame img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:none;
+}
+
+.avatar-placeholder{
+  font-size:2.5rem;
+  color:var(--primary);
+}
+
+.sidebar h1{
+  color:#fff;
+  font-size:1.4rem;
+  text-shadow:0 0 15px var(--primary);
+  margin-bottom:5px;
+  word-break:break-word;
+}
+
+.sidebar .rank{
+  color:var(--accent);
+  font-size:.8rem;
+  margin-bottom:20px;
+  letter-spacing:1.5px;
+}
+
+.main-content{
+  display:flex;
+  flex-direction:column;
+  gap:25px;
+}
+
+.features-banner{
+  background:linear-gradient(
+    135deg,
+    rgba(0,255,204,.1),
+    rgba(255,0,85,.05)
+  );
+  border:1px solid var(--primary);
+  border-radius:16px;
+  padding:20px;
+  box-shadow:0 0 25px var(--primary-glow);
+}
+
+.features-banner h3{
+  color:var(--primary);
+  margin-bottom:12px;
+  font-size:1.1rem;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.features-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:12px;
+}
+
+.feature-item{
+  background:rgba(0,0,0,.5);
+  border:1px dashed var(--border-color);
+  padding:10px 12px;
+  border-radius:8px;
+  font-size:.8rem;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  cursor:pointer;
+  transition:.2s;
+  user-select:none;
+}
+
+.feature-item:hover{
+  border-color:var(--primary);
+  background:rgba(0,255,204,.08);
+}
+
+.feature-item:active{
+  transform:scale(.97);
+}
+
+.panel-box{
+  background:var(--panel-bg);
+  border:1px solid var(--primary);
+  border-radius:16px;
+  padding:25px;
+  box-shadow:0 0 35px var(--primary-glow);
+  backdrop-filter:blur(18px);
+}
+
+.panel-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px dashed var(--primary);
+  padding-bottom:10px;
+  margin-bottom:15px;
+}
+
+.panel-header h2{
+  color:#fff;
+  font-size:1.2rem;
+  text-shadow:0 0 10px var(--primary);
+}
+
+.status-dot{
+  width:10px;
+  height:10px;
+  background:var(--primary);
+  border-radius:50%;
+  box-shadow:0 0 12px var(--primary);
+  animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+  0%{transform:scale(.95);opacity:.8;}
+  50%{transform:scale(1.3);opacity:1;}
+  100%{transform:scale(.95);opacity:.8;}
+}
+
+p{
+  line-height:1.8;
+  font-size:.95rem;
+  margin-bottom:15px;
+  word-break:break-word;
+}
+
+.actions-container{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:12px;
+  margin-top:15px;
+}
+
+.cyber-btn{
+  background:rgba(0,255,204,.12);
+  border:1px solid var(--primary);
+  color:var(--primary);
+  padding:12px 18px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:bold;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  transition:.3s;
+  font-size:.85rem;
+  text-align:center;
+}
+
+.cyber-btn:hover{
+  background:var(--primary);
+  color:#000;
+  box-shadow:0 0 25px var(--primary);
+  transform:translateY(-2px);
+}
+
+.cyber-btn.sec-wa{
+  border-color:#00ff66;
+  color:#00ff66;
+  background:rgba(0,255,102,.12);
+}
+
+.cyber-btn.sec-wa:hover{
+  background:#00ff66;
+  color:#000;
+}
+
+.cyber-btn.group-btn{
+  border-color:var(--accent);
+  color:var(--accent);
+  background:rgba(255,0,85,.12);
+}
+
+.cyber-btn.group-btn:hover{
+  background:var(--accent);
+  color:#fff;
+  box-shadow:0 0 25px var(--accent);
+}
+
+.terminal-box{
+  background:#000;
+  border:1px solid var(--primary);
+  border-radius:10px;
+  padding:15px;
+  max-height:180px;
+  overflow-y:auto;
+  color:var(--primary);
+  font-size:.85rem;
+  margin-top:15px;
+  box-shadow:inset 0 0 15px rgba(0,255,204,.15);
+  word-break:break-word;
+}
+
+.terminal-input-line{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-top:10px;
+  background:rgba(0,0,0,.8);
+  border:1px solid var(--border-color);
+  padding:6px 10px;
+  border-radius:6px;
+}
+
+.terminal-input-line input{
+  background:transparent;
+  border:none;
+  color:#fff;
+  outline:none;
+  width:100%;
+  font-family:monospace;
+  font-size:.95rem;
+}
+
+.overlay{
+  display:none;
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,.88);
+  z-index:9998;
+  backdrop-filter:blur(10px);
+}
+
+.overlay.show{
+  display:block;
+}
+
+.auth-box{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:90%;
+  max-width:380px;
+  background:#030c14;
+  border:2px solid var(--primary);
+  padding:30px;
+  border-radius:14px;
+  box-shadow:0 0 40px rgba(0,255,204,.4);
+  text-align:center;
+}
+
+.auth-box h3{
+  color:var(--primary);
+  margin-bottom:15px;
+}
+
+.auth-box input{
+  width:100%;
+  padding:12px;
+  background:#000;
+  border:1px solid var(--primary);
+  color:var(--primary);
+  border-radius:8px;
+  text-align:center;
+  font-size:1.2rem;
+  margin-bottom:15px;
+  outline:none;
+  letter-spacing:3px;
+}
+
+.admin-modal{
+  display:none;
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:92%;
+  max-width:650px;
+  background:#020810;
+  border:2px solid var(--primary);
+  box-shadow:0 0 60px rgba(0,255,204,.5);
+  z-index:9999;
+  border-radius:16px;
+  padding:30px;
+  max-height:90vh;
+  overflow-y:auto;
+}
+
+.admin-modal.show{
+  display:block;
+}
+
+.admin-modal h3{
+  color:var(--primary);
+  margin-bottom:20px;
+  border-bottom:1px solid var(--primary);
+  padding-bottom:10px;
+}
+
+.admin-modal label{
+  display:block;
+  font-size:.85rem;
+  margin-bottom:6px;
+  color:#fff;
+}
+
+.admin-modal input,
+.admin-modal textarea,
+.admin-modal select{
+  width:100%;
+  background:#010408;
+  border:1px solid var(--primary);
+  padding:10px;
+  color:var(--primary);
+  border-radius:6px;
+  margin-bottom:15px;
+  font-family:monospace;
+}
+
+.admin-modal input[type="range"]{
+  padding:0;
+}
+
+.admin-section{
+  border:1px dashed var(--border-color);
+  border-radius:10px;
+  padding:15px;
+  margin:15px 0;
+}
+
+.admin-section-title{
+  color:var(--primary);
+  font-weight:bold;
+  margin-bottom:12px;
+}
+
+.admin-check{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  color:#fff;
+  margin:10px 0 15px;
+}
+
+.admin-check input{
+  width:auto;
+  margin:0;
+  accent-color:var(--primary);
+}
+
+.range-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.range-row input{
+  flex:1;
+}
+
+.range-value{
+  min-width:55px;
+  text-align:center;
+  color:var(--primary);
+}
+
+.close-admin{
+  background:var(--accent);
+  color:#fff;
+  border:none;
+  padding:10px;
+  border-radius:6px;
+  cursor:pointer;
+  width:100%;
+  font-weight:bold;
+  margin-top:10px;
+}
+
+.reset-btn{
+  background:#333;
+  color:#fff;
+  border:1px solid #666;
+  padding:10px;
+  border-radius:6px;
+  cursor:pointer;
+  width:100%;
+  font-weight:bold;
+  margin-top:10px;
+}
+
+.system-admin-trigger{
+  position:fixed;
+  bottom:20px;
+  left:20px;
+  background:rgba(0,255,204,.15);
+  border:1px solid var(--primary);
+  color:var(--primary);
+  padding:10px 18px;
+  border-radius:8px;
+  font-size:.85rem;
+  cursor:pointer;
+  z-index:999;
+  box-shadow:0 0 15px rgba(0,255,204,.3);
+  transition:.3s;
+}
+
+.system-admin-trigger:hover{
+  background:var(--primary);
+  color:#000;
+}
+
+.toast{
+  position:fixed;
+  bottom:80px;
+  left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:#020810;
+  border:1px solid var(--primary);
+  color:var(--primary);
+  padding:12px 20px;
+  border-radius:10px;
+  box-shadow:0 0 25px var(--primary-glow);
+  z-index:10000;
+  opacity:0;
+  pointer-events:none;
+  transition:.3s;
+  font-size:.85rem;
+  text-align:center;
+  max-width:90%;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+
+@media(max-width:600px){
+  .master-container{
+    padding:12px;
+    margin:10px auto;
+  }
+
+  .panel-box,
+  .sidebar,
+  .features-banner{
+    padding:18px;
+  }
+
+  .system-admin-trigger{
+    left:10px;
+    bottom:10px;
+  }
+
+  .admin-modal{
+    padding:20px;
+  }
+}
+</style>
 </head>
+
 <body>
-    <canvas id="matrixCanvas"></canvas>
-    <button class="system-admin-trigger" onclick="requestPassword()">⚡ لوحة تحكم المطور</button>
-    <div class="auth-overlay" id="authOverlay"><div class="auth-box"><h3>أدخل مفتاح الترخيص السري للمالك</h3><input type="password" id="ownerPassword" placeholder="••••••" onkeypress="checkPasswordKey(event)"><button class="cyber-btn" onclick="verifyPassword()" style="width: 100%; justify-content: center;">فك تشفير الدخول</button><button class="close-admin" onclick="closeAuth()" style="margin-top: 10px; background: #333;">إلغاء</button></div></div>
-    <div class="master-container"><div class="sidebar"><div class="avatar-frame"><span id="avatarPlaceholder" class="avatar-placeholder">🛡️</span><img id="userAvatar" alt="Avatar"></div><h1 id="displayName">🦅ĳøų(⁠◠⁠‿⁠◕⁠)ßăf🦅</h1><div class="rank" id="displayRank">CHIEF SECURITY ARCHITECT</div><div style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 15px;"><p style="font-size: 0.82rem; color: var(--primary);">[حالة النواة]: 100% Secure</p></div></div>
-        <div class="main-content">
-            <div class="features-banner"><h3>⚡ أدوات الفحص والأمان المتقدمة (اضغط للتنفيذ المباشر)</h3><div class="features-grid"><div class="feature-item" onclick="runTool('port')">🔍 فحص المنافذ</div><div class="feature-item" onclick="runTool('vuln')">🛡️ كشف الثغرات</div><div class="feature-item" onclick="runTool('ssl')">🔒 تحليل SSL</div><div class="feature-item" onclick="runTool('ddos')">⚡ جدار الحماية</div><div class="feature-item" onclick="runTool('yara')">🧬 أداة YARA</div></div></div>
-            <div class="panel-box"><div class="panel-header"><h2>البروتوكول الذاتي والنبذة التقنية</h2><div class="status-dot"></div></div><p id="displayAbout">منصة أمن سيبراني متطورة ومحطة عمليات مركزية متكاملة لاختبار الاختراق الأخلاقي، تأمين البنية التحتية الرقمية، ومراقبة تدفق البيانات بحماية تامة ضد التهديدات السيبرانية.</p><div style="font-size: 0.85rem; color: var(--primary); word-break: break-all;">[البريد الإلكتروني للعمليات]: <span id="displayEmail">nexus.ops@cyber.secure</span></div></div>
-            <div class="panel-box"><div class="panel-header"><h2>قنوات الاتصال المشفرة والمجتمعات التقنية</h2></div><p>تواصل عبر قنوات الواتساب المعتمدة أو انضم لجروب الأمان السيبراني التعليمي:</p><div class="actions-container"><a id="displayWaPersonal" href="https://wa.me/201123817987" target="_blank" class="cyber-btn sec-wa">💬 سونيك (01123817987)</a><a id="displayWaSecond" href="https://wa.me/201023219015" target="_blank" class="cyber-btn sec-wa">🟢 🦅ĳøų(⁠◠⁠‿⁠◕⁠)ßăf🦅 (010)</a><a id="displayWaGroup" href="https://chat.whatsapp.com/GSFCB8ckqAu0ncbfxwSaj3" target="_blank" class="cyber-btn group-btn">🛡️ جروب التعلم الأمني</a></div></div>
-            <div class="panel-box"><div class="panel-header"><h2>محطة التحكم والأوامر التفاعلية (Terminal OS)</h2></div><div class="terminal-box" id="terminalOutput">> Nexus Core OS [Version 7.5.0 - Enterprise Edition]<br>> اكتب 'help' لعرض الأوامر، أو 'scan', 'port', 'yara', 'clear'...<br></div><div class="terminal-input-line"><span style="color: var(--primary);">nexus@root:~#</span><input type="text" id="terminalInput" placeholder="اكتب أمر هنا..." onkeydown="handleTerminalKey(event)"></div></div>
-        </div>
+
+<canvas id="matrixCanvas"></canvas>
+
+<button class="system-admin-trigger" id="adminTriggerBtn">
+⚡ لوحة تحكم المطور
+</button>
+
+<div class="overlay" id="authOverlay">
+  <div class="auth-box">
+    <h3>أدخل مفتاح الترخيص السري للمالك</h3>
+
+    <input
+      type="password"
+      id="ownerPassword"
+      placeholder="••••••"
+      inputmode="numeric"
+      autocomplete="off"
+    >
+
+    <button class="cyber-btn" id="verifyBtn" style="width:100%;justify-content:center;">
+      فك تشفير الدخول
+    </button>
+
+    <button class="close-admin" id="closeAuthBtn" style="margin-top:10px;background:#333;">
+      إلغاء
+    </button>
+  </div>
+</div>
+
+<div class="master-container">
+
+  <div class="sidebar">
+
+    <div class="avatar-frame">
+      <span id="avatarPlaceholder" class="avatar-placeholder">🛡️</span>
+      <img id="userAvatar" alt="Avatar">
     </div>
-    <div class="admin-modal" id="adminModal"><h3>لوحة إدارة المطور الملكية</h3><label>الاسم المستعار للنظام:</label><input type="text" id="adminNameInput" value="🦅ĳøų(⁠◠⁠‿⁠◕⁠)ßăf🦅"><label>المسمى الوظيفي:</label><input type="text" id="adminRankInput" value="CHIEF SECURITY ARCHITECT"><label>نبذة النظام:</label><textarea id="adminAboutInput" rows="3">منصة أمن سيبراني متطورة</textarea><label>البريد:</label><input type="text" id="adminEmailInput" value="nexus.ops@cyber.secure"><label>واتساب 1:</label><input type="text" id="adminWaPersonalInput" value="https://wa.me/201123817987"><label>واتساب 2:</label><input type="text" id="adminWaSecondInput" value="https://wa.me/201023219015"><label>الجروب:</label><input type="text" id="adminWaGroupInput" value="https://chat.whatsapp.com/GSFCB8ckqAu0ncbfxwSaj3"><label>شكل الماتركس:</label><select id="adminMatrixPattern"><option value="matrix">ماتركس كلاسيك</option><option value="binary">ثنائي</option><option value="cyber">سايبر</option><option value="rain">نجوم</option><option value="hex">هيكس</option><option value="quantum">كمومي</option></select><label>لون النيون:</label><select id="adminMatrixTheme"><option value="#00ffcc">سيان</option><option value="#00ff66">اخضر</option><option value="#ff0055">بينك</option><option value="#3399ff">ازرق</option><option value="#ffaa00">برتقالي</option></select><button class="cyber-btn" onclick="saveAdminData()" style="width: 100%; justify-content: center; margin-bottom: 10px; background: var(--primary); color: #000;">حفظ التغييرات</button><button class="close-admin" onclick="closeAdmin()">إغلاق</button></div>
+
+    <h1 id="displayName">NEXUS OPERATOR</h1>
+
+    <div class="rank" id="displayRank">
+      CHIEF SECURITY ARCHITECT
+    </div>
+
+    <div style="margin-top:20px;border-top:1px solid var(--border-color);padding-top:15px;">
+      <p style="font-size:.82rem;color:var(--primary);margin:0;">
+        [حالة النواة]: <span id="displayCoreStatus">100% Secure</span>
+      </p>
+    </div>
+
+  </div>
+
+  <div class="main-content">
+
+    <div class="features-banner">
+
+      <h3>
+        ⚡ أدوات الفحص والأمان المتقدمة
+        (اضغط للتنفيذ المباشر)
+      </h3>
+
+      <div class="features-grid">
+
+        <div class="feature-item" data-tool="port">
+          🔍 فحص المنافذ
+        </div>
+
+        <div class="feature-item" data-tool="vuln">
+          🛡️ كشف الثغرات
+        </div>
+
+        <div class="feature-item" data-tool="ssl">
+          🔒 تحليل SSL
+        </div>
+
+        <div class="feature-item" data-tool="ddos">
+          ⚡ جدار الحماية
+        </div>
+
+        <div class="feature-item" data-tool="yara">
+          🧬 أداة YARA
+        </div>
+
+      </div>
+    </div>
+
+    <div class="panel-box">
+
+      <div class="panel-header">
+        <h2>البروتوكول الذاتي والنبذة التقنية</h2>
+        <div class="status-dot"></div>
+      </div>
+
+      <p id="displayAbout">
+        منصة أمن سيبراني متطورة ومحطة عمليات مركزية متكاملة لاختبار
+        الاختراق الأخلاقي، تأمين البنية التحتية الرقمية، ومراقبة تدفق
+        البيانات بحماية تامة ضد التهديدات السيبرانية.
+      </p>
+
+      <div style="font-size:.85rem;color:var(--primary);word-break:break-all;">
+        [البريد الإلكتروني للعمليات]:
+        <span id="displayEmail">nexus.ops@cyber.secure</span>
+      </div>
+
+    </div>
+
+    <div class="panel-box">
+
+      <div class="panel-header">
+        <h2>قنوات الاتصال المشفرة والمجتمعات التقنية</h2>
+      </div>
+
+      <p>
+        تواصل عبر قنوات الواتساب المعتمدة أو انضم لجروب الأمان السيبراني التعليمي:
+      </p>
+
+      <div class="actions-container">
+
+        <a
+          id="displayWaPersonal"
+          href="https://wa.me/201123817987"
+          target="_blank"
+          rel="noopener"
+          class="cyber-btn sec-wa"
+        >
+          💬 سونيك (01123817987)
+        </a>
+
+        <a
+          id="displayWaSecond"
+          href="https://wa.me/201023219015"
+          target="_blank"
+          rel="noopener"
+          class="cyber-btn sec-wa"
+        >
+          🟢 يوسف (01023219015)
+        </a>
+
+        <a
+          id="displayWaGroup"
+          href="https://chat.whatsapp.com/GSFCB8ckqAu0ncbfxwSaj3"
+          target="_blank"
+          rel="noopener"
+          class="cyber-btn group-btn"
+        >
+          🛡️ جروب التعلم الأمني
+        </a>
+
+      </div>
+    </div>
+
+    <div class="panel-box">
+
+      <div class="panel-header">
+        <h2>محطة التحكم والأوامر التفاعلية (Terminal OS)</h2>
+      </div>
+
+      <div class="terminal-box" id="terminalOutput">
+        &gt; Nexus Core OS [Version 7.5.0 - Enterprise Edition]<br>
+        &gt; اكتب 'help' لعرض الأوامر، أو 'scan', 'port', 'yara', 'clear'...
+      </div>
+
+      <div class="terminal-input-line">
+
+        <span style="color:var(--primary);">
+          nexus@root:~#
+        </span>
+
+        <input
+          type="text"
+          id="terminalInput"
+          placeholder="اكتب أمر هنا..."
+          autocomplete="off"
+        >
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- ================= ADMIN PANEL ================= -->
+
+<div class="admin-modal" id="adminModal">
+
+  <h3>⚡ لوحة إدارة المطور الملكية</h3>
+
+  <label>صورة الملف الشخصي:</label>
+  <input type="file" id="adminImageInput" accept="image/*">
+
+  <label>الاسم المستعار للنظام:</label>
+  <input type="text" id="adminNameInput" value="NEXUS OPERATOR">
+
+  <label>المسمى الوظيفي / الرتبة:</label>
+  <input type="text" id="adminRankInput" value="CHIEF SECURITY ARCHITECT">
+
+  <label>نبذة النظام:</label>
+  <textarea id="adminAboutInput" rows="3">منصة أمن سيبراني متطورة ومحطة عمليات مركزية متكاملة لاختبار الاختراق الأخلاقي.</textarea>
+
+  <label>حالة النواة:</label>
+  <input type="text" id="adminCoreStatusInput" value="100% Secure">
+
+  <label>عنوان الصفحة:</label>
+  <input type="text" id="adminTitleInput" value="NEXUS-X // GLOBAL CYBER DEFENSE OS">
+
+  <label>رابط واتساب الأول:</label>
+  <input type="text" id="adminWaPersonalInput" value="https://wa.me/201123817987">
+
+  <label>رابط واتساب الثاني:</label>
+  <input type="text" id="adminWaSecondInput" value="https://wa.me/201023219015">
+
+  <label>رابط جروب التعلم الأمني:</label>
+  <input type="text" id="adminWaGroupInput" value="https://chat.whatsapp.com/GSFCB8ckqAu0ncbfxwSaj3">
+
+  <label>البريد الإلكتروني:</label>
+  <input type="text" id="adminEmailInput" value="nexus.ops@cyber.secure">
+
+  <!-- BACKGROUND SETTINGS -->
+
+  <div class="admin-section">
+
+    <div class="admin-section-title">
+      🎨 إعدادات خلفية النظام
+    </div>
+
+    <label>شكل خلفية الماتركس:</label>
+
+    <select id="adminMatrixPattern">
+
+      <option value="matrix">
+        1. ماتركس كلاسيكي
+      </option>
+
+      <option value="binary">
+        2. مطر ثنائي سريع
+      </option>
+
+      <option value="diagonal">
+        3. مطر قطري
+      </option>
+
+      <option value="hexline">
+        4. شرائط HEX
+      </option>
+
+      <option value="wave">
+        5. موجة كمومية
+      </option>
+
+      <option value="radar">
+        6. رادار دائري
+      </option>
+
+      <option value="network">
+        7. شبكة عقد
+      </option>
+
+      <option value="glitch">
+        8. Glitch Bars
+      </option>
+
+      <option value="starfield">
+        9. Starfield
+      </option>
+
+      <option value="orbit">
+        10. Orbit Particles
+      </option>
+
+    </select>
+
+    <label>لون النظام:</label>
+
+    <select id="adminMatrixTheme">
+
+      <option value="#00ffcc">
+        أخضر سيبراني
+      </option>
+
+      <option value="#00ff66">
+        أخضر Matrix
+      </option>
+
+      <option value="#ff0055">
+        قرمزي Cyberpunk
+      </option>
+
+      <option value="#3399ff">
+        أزرق Quantum
+      </option>
+
+      <option value="#ffaa00">
+        برتقالي Solar
+      </option>
+
+    </select>
+
+    <label>سرعة الخلفية:</label>
+
+    <div class="range-row">
+
+      <input
+        type="range"
+        id="adminMatrixSpeed"
+        min="1"
+        max="100"
+        value="50"
+      >
+
+      <span class="range-value" id="matrixSpeedValue">
+        50%
+      </span>
+
+    </div>
+
+    <label>كثافة الخلفية:</label>
+
+    <div class="range-row">
+
+      <input
+        type="range"
+        id="adminMatrixDensity"
+        min="20"
+        max="100"
+        value="70"
+      >
+
+      <span class="range-value" id="matrixDensityValue">
+        70%
+      </span>
+
+    </div>
+
+    <label class="admin-check">
+
+      <input
+        type="checkbox"
+        id="adminMatrixEnabled"
+        checked
+      >
+
+      تشغيل خلفية النظام
+
+    </label>
+
+  </div>
+
+  <button
+    class="cyber-btn"
+    id="saveAdminBtn"
+    style="width:100%;justify-content:center;margin-bottom:10px;background:var(--primary);color:#000;"
+  >
+    💾 حفظ التغييرات في النواة
+  </button>
+
+  <button
+    class="reset-btn"
+    id="resetAdminBtn"
+  >
+    ♻️ إعادة الإعدادات الافتراضية
+  </button>
+
+  <button
+    class="close-admin"
+    id="closeAdminBtn"
+  >
+    إغلاق لوحة المالك
+  </button>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
 <script>
-const OWNER_PASS = "nexus123";
-function requestPassword(){document.getElementById('authOverlay').style.display='block';}
-function closeAuth(){document.getElementById('authOverlay').style.display='none';}
-function checkPasswordKey(e){if(e.key==='Enter')verifyPassword();}
-function verifyPassword(){const pass=document.getElementById('ownerPassword').value;if(pass===OWNER_PASS){closeAuth();document.getElementById('adminModal').style.display='block';loadAdminData();}else{alert('كلمة السر خطأ!');}}
-function loadAdminData(){document.getElementById('adminNameInput').value=document.getElementById('displayName').innerText;document.getElementById('adminRankInput').value=document.getElementById('displayRank').innerText;document.getElementById('adminAboutInput').value=document.getElementById('displayAbout').innerText;document.getElementById('adminEmailInput').value=document.getElementById('displayEmail').innerText;document.getElementById('adminWaPersonalInput').value=document.getElementById('displayWaPersonal').href;document.getElementById('adminWaSecondInput').value=document.getElementById('displayWaSecond').href;document.getElementById('adminWaGroupInput').value=document.getElementById('displayWaGroup').href;}
-function saveAdminData(){document.getElementById('displayName').innerText=document.getElementById('adminNameInput').value;document.getElementById('displayRank').innerText=document.getElementById('adminRankInput').value;document.getElementById('displayAbout').innerText=document.getElementById('adminAboutInput').value;document.getElementById('displayEmail').innerText=document.getElementById('adminEmailInput').value;document.getElementById('displayWaPersonal').href=document.getElementById('adminWaPersonalInput').value;document.getElementById('displayWaSecond').href=document.getElementById('adminWaSecondInput').value;document.getElementById('displayWaGroup').href=document.getElementById('adminWaGroupInput').value;currentMatrixColor=document.getElementById('adminMatrixTheme').value;currentPatternKey=document.getElementById('adminMatrixPattern').value;localStorage.setItem('sys_matrix_color',currentMatrixColor);localStorage.setItem('sys_matrix_pattern',currentPatternKey);alert('تم الحفظ!');closeAdmin();}
-function closeAdmin(){document.getElementById('adminModal').style.display='none';}
-function runTool(tool){const output=document.getElementById('terminalOutput');const tools={'port':'فحص المنافذ... تم العثور على 3 منافذ','vuln':'كشف الثغرات... النظام آمن','ssl':'تحليل SSL... الشهادة صالحة','ddos':'تفعيل جدار الحماية','yara':'تشغيل YARA... لا يوجد تهديدات'};output.innerHTML+=`> ${tools[tool]}<br>`;output.scrollTop=output.scrollHeight;}
-function handleTerminalKey(e){if(e.key==='Enter'){const input=document.getElementById('terminalInput');const cmd=input.value;const output=document.getElementById('terminalOutput');output.innerHTML+=`nexus@root:~# ${cmd}<br>`;if(cmd==='help')output.innerHTML+=`الأوامر: scan, port, yara, clear<br>`;else if(cmd==='clear')output.innerHTML='';else output.innerHTML+=`تم التنفيذ: ${cmd}<br>`;input.value='';output.scrollTop=output.scrollHeight;}}
-const canvas=document.getElementById('matrixCanvas');const ctx=canvas.getContext('2d');function resizeCanvas(){canvas.height=window.innerHeight;canvas.width=window.innerWidth;}resizeCanvas();
-const charSets={matrix:'01ABC<>/\\*&NEXUS',binary:'01',cyber:'⚡01<>#_ROOT*&',rain:'✦★▲▼PULSE',hex:'0123456789ABCDEF',quantum:'ΨΩΦΔΘ≈∞'};
-let fontSize=13;let columns=Math.floor(canvas.width/fontSize);let drops=[];for(let x=0;x<columns;x++){drops[x]=1;}
-let currentMatrixColor=localStorage.getItem('sys_matrix_color')||'#00ffcc';let currentPatternKey=localStorage.getItem('sys_matrix_pattern')||'matrix';
-function drawMatrix(){ctx.fillStyle='rgba(0, 2, 6, 0.08)';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.fillStyle=currentMatrixColor;ctx.font=fontSize+'px monospace';const activeChars=charSets[currentPatternKey]||charSets.matrix;for(let i=0;i<drops.length;i++){const text=activeChars.charAt(Math.floor(Math.random()*activeChars.length));ctx.fillText(text,i*fontSize,drops[i]*fontSize);if(drops[i]*fontSize>canvas.height&&Math.random()>0.975)drops[i]=0;drops[i]++;}}
-setInterval(drawMatrix,35);
-window.addEventListener('resize',()=>{resizeCanvas();columns=Math.floor(canvas.width/fontSize);drops=[];for(let x=0;x<columns;x++){drops[x]=1;}});
-</script>
-</body>
-</html>
+(function(){
+
+"use strict";
+
+/* =========================================================
+   SAFE STORAGE
+========================================================= */
+
+var memoryStore = {};
+
+var storage = {
+
+  get:function(key){
+    try{
+      return localStorage.getItem(key);
+    }catch(e){
+      return key in memoryStore ? memoryStore[key] : null;
+    }
+  },
+
+  set:function(key,value){
+    try{
+      localStorage.setItem(key,value);
+    }catch(e){
+      memoryStore[key]=value;
+    }
+  },
+
+  remove:function(key){
+    try{
+      localStorage.removeItem(key);
+    }catch(e){
+      delete memoryStore[key];
+    }
+  },
+
+  clear:function(){
+    try{
+      localStorage.clear();
+    }catch(e){
+      memoryStore={};
+    }
+  }
+
+};
+
+/* =========================================================
+   DEFAULT SETTINGS
+========================================================= */
+
+var DEFAULTS = {
+
+  name:"NEXUS OPERATOR",
+
+  rank:"CHIEF SECURITY ARCHITECT",
+
+  about:
+  "منصة أمن سيبراني متطورة ومحطة عمليات مركزية متكاملة لاختبار الاختراق الأخلاقي.",
+
+  coreStatus:"100% Secure",
+
+  title:
+  "NEXUS-X // GLOBAL CYBER DEFENSE OS",
+
+  email:
+  "nexus.ops@cyber.secure",
+
+  waPersonal:
+  "https://wa.me/201123817987",
+
+  waSecond:
+  "https://wa.me/201023219015",
+
+  waGroup:
+  "https://chat.whatsapp.com/GSFCB8ckqAu0ncbfxwSaj3",
+
+  color:"#00ffcc",
+
+  pattern:"matrix",
+
+  speed:50,
+
+  density:70,
+
+  enabled:true
+
+};
+
+/* =========================================================
+   CANVAS
+========================================================= */
+
+var canvas=document.getElementById("matrixCanvas");
+var ctx=canvas.getContext("2d");
+
+var W=0;
+var H=0;
+
+var state={
+
+  color:storage.get("sys_matrix_color") || DEFAULTS.color,
+
+  pattern:storage.get("sys_matrix_pattern") || DEFAULTS.pattern,
+
+  speed:Number(storage.get("sys_matrix_speed")) || DEFAULTS.speed,
+
+  density:Number(storage.get("sys_matrix_density")) || DEFAULTS.density,
+
+  enabled:
+    storage.get("sys_matrix_enabled") === null
+    ? DEFAULTS.enabled
+    : storage.get("sys_matrix_enabled")==="true"
+
+};
+
+/* =========================================================
+   RGB
+========================================================= */
+
+function hexToRgb(hex){
+
+  hex=(hex || "#00ffcc").replace("#","");
+
+  var n=parseInt(hex,16);
+
+  if(isNaN(n)){
+    return {r:0,g:255,b:204};
+  }
+
+  return {
+
+    r:(n>>16)&255,
+
+    g:(n>>8)&255,
+
+    b:n&255
+
+  };
+
+}
+
+/* =========================================================
+   PARTICLES
+========================================================= */
+
+var P={};
+
+function randHexString(len){
+
+  var chars="0123456789ABCDEF";
+  var s="";
+
+  for(var i=0;i<len;i++){
+
+    s+=chars.charAt(
+      Math.floor(Math.random()*chars.length
